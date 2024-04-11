@@ -1,6 +1,6 @@
 {
   "name": "@theatre/studio",
-  "version": "0.7.1-dev.1",
+  "version": "0.7.1",
   "license": "AGPL-3.0-only",
   "description": "Motion design editor for the web",
   "repository": {
