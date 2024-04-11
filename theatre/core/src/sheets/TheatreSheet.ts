@@ -102,6 +102,10 @@ export interface ISheet {
     },
   ): ISheetObject<Props>
 
+  __experimental_getExistingObject<Props extends UnknownShorthandCompoundProps>(
+    key: string,
+  ): ISheetObject<Props> | undefined
+
   /**
    * Detaches a previously created child object from the sheet.
    *
@@ -202,6 +206,20 @@ export default class TheatreSheet implements ISheet {
       }
       return object.publicApi as $IntentionalAny
     }
+  }
+
+  __experimental_getExistingObject<Props extends UnknownShorthandCompoundProps>(
+    key: string,
+  ): ISheetObject<Props> | undefined {
+    const internal = privateAPI(this)
+    const sanitizedPath = validateAndSanitiseSlashedPathOrThrow(
+      key,
+      `sheet.object`,
+    )
+
+    const existingObject = internal.getObject(sanitizedPath as ObjectAddressKey)
+
+    return existingObject?.publicApi as $IntentionalAny
   }
 
   get sequence(): TheatreSequence {
