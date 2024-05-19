@@ -44,6 +44,9 @@ const possibleDirections = [
 ]
 
 export default class Sequence implements PointerToPrismProvider {
+  get type(): 'Theatre_Sequence' {
+    return 'Theatre_Sequence'
+  }
   public readonly address: SequenceAddress
   publicApi: TheatreSequence
 
@@ -98,6 +101,7 @@ export default class Sequence implements PointerToPrismProvider {
         length: val(this.pointer.length),
         playing: val(this.pointer.playing),
         position: val(this.pointer.position),
+        subUnitsPerUnit: val(this.pointer.subUnitsPerUnit),
       })) as $IntentionalAny as Prism<V>
     }
     if (path.length > 1) {
@@ -106,6 +110,8 @@ export default class Sequence implements PointerToPrismProvider {
     const [prop] = path
     if (prop === 'length') {
       return this._lengthD as $IntentionalAny as Prism<V>
+    } else if (prop === 'subUnitsPerUnit') {
+      return this._subUnitsPerUnitD as $IntentionalAny as Prism<V>
     } else if (prop === 'position') {
       return this._positionD as $IntentionalAny as Prism<V>
     } else if (prop === 'playing') {

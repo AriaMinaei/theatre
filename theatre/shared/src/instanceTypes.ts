@@ -5,6 +5,7 @@ import type SheetObjectTemplate from '@theatre/core/sheetObjects/SheetObjectTemp
 import type Sheet from '@theatre/core/sheets/Sheet'
 import type SheetTemplate from '@theatre/core/sheets/SheetTemplate'
 import type {$IntentionalAny} from './utils/types'
+import type Sequence from '@theatre/core/sequences/Sequence'
 
 /**
  * Since \@theatre/core and \@theatre/studio are separate bundles,
@@ -21,6 +22,8 @@ export const isSheetTemplate = typeAsserter<SheetTemplate>(
 )
 
 export const isSheetObject = typeAsserter<SheetObject>('Theatre_SheetObject')
+
+export const isSequence = typeAsserter<Sequence>('Theatre_Sequence')
 
 export const isSheetObjectTemplate = typeAsserter<SheetObjectTemplate>(
   'Theatre_SheetObjectTemplate',

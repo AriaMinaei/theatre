@@ -671,6 +671,12 @@ namespace stateEditors {
             )
           }
 
+          export function setSubUnitsPerUnit(
+            p: WithoutSheetInstance<SheetAddress> & {subUnitsPerUnit: number},
+          ) {
+            _ensure(p).subUnitsPerUnit = clamp(p.subUnitsPerUnit, 1, 2 ** 12)
+          }
+
           function _ensureTracksOfObject(
             p: WithoutSheetInstance<SheetObjectAddress>,
           ) {

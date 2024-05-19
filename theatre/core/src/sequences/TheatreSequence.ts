@@ -132,6 +132,7 @@ export interface ISequence {
     playing: boolean
     length: number
     position: number
+    subUnitsPerUnit: number
   }>
 
   /**

@@ -1,7 +1,8 @@
 import type {Pointer} from '@theatre/dataverse'
-import {isSheetObject} from '@theatre/shared/instanceTypes'
+import {isSequence, isSheetObject} from '@theatre/shared/instanceTypes'
 import type {$FixMe, $IntentionalAny} from '@theatre/shared/utils/types'
 import get from 'lodash-es/get'
+import isInteger from 'lodash-es/isInteger'
 import type {ITransactionPrivateApi} from './StudioStore'
 import forEachPropDeep from '@theatre/shared/utils/forEachDeep'
 import getDeep from '@theatre/shared/utils/getDeep'
@@ -186,9 +187,36 @@ export default function createTransactionPrivateApi(
         } else {
           setStaticOrKeyframeProp(_value, propConfig, path)
         }
+      } else if (isSequence(root)) {
+        const [prop] = path
+        if (prop === 'subUnitsPerUnit') {
+          if (typeof _value !== 'number' || !isInteger(_value) || _value < 1) {
+            throw new Error(
+              `Value ${_value} is not an integer, which is required for setting sequence prop ${prop}`,
+            )
+          }
+          stateEditors.coreByProject.historic.sheetsById.sequence.setSubUnitsPerUnit(
+            {
+              ...root.address,
+              subUnitsPerUnit: _value,
+            },
+          )
+        } else if (prop === 'length') {
+          if (typeof _value !== 'number' || _value <= 0.001) {
+            throw new Error(
+              `Value ${_value} is not a positive number, which is required for setting sequence prop ${prop}`,
+            )
+          }
+          stateEditors.coreByProject.historic.sheetsById.sequence.setLength({
+            ...root.address,
+            length: _value,
+          })
+        } else {
+          throw new Error(`Setting sequence prop ${prop} is not supported`)
+        }
       } else {
         throw new Error(
-          'Only setting props of SheetObject-s is supported in a transaction so far',
+          'Only setting props of SheetObject-s and sequences is supported in a transaction so far',
         )
       }
     },
