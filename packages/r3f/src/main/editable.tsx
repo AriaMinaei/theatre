@@ -4,7 +4,7 @@ import React, {forwardRef, useEffect, useLayoutEffect, useRef} from 'react'
 import {allRegisteredObjects, editorStore} from './store'
 import {mergeRefs} from 'react-merge-refs'
 import useInvalidate from './useInvalidate'
-import {useCurrentSheet} from './SheetProvider'
+import {useCurrentR3FSheetConfig, useCurrentSheet} from './SheetProvider'
 import defaultEditableFactoryConfig from './defaultEditableFactoryConfig'
 import type {EditableFactoryConfig} from './editableFactoryConfigUtils'
 import {makeStoreKey} from './utils'
@@ -75,17 +75,20 @@ const createEditable = <Keys extends keyof JSX.IntrinsicElements>(
         const objectRef = useRef<JSX.IntrinsicElements[U]>()
 
         const sheet = useCurrentSheet()!
+        const sheetConfig = useCurrentR3FSheetConfig()
         const rafDriver = useCurrentRafDriver()
 
         const [sheetObject, setSheetObject] = useState<
           undefined | ISheetObject<$FixMe>
         >(undefined)
+        
+        const keyPrefix = sheetConfig?.namespacePrefix ? `${sheetConfig.namespacePrefix} / ` : ''
 
         const storeKey = useMemo(
           () =>
             makeStoreKey({
               ...sheet.address,
-              objectKey: theatreKey as $IntentionalAny,
+              objectKey: `${keyPrefix}${theatreKey}` as $IntentionalAny,
             }),
           [sheet, theatreKey],
         )

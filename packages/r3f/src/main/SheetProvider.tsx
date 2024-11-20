@@ -9,11 +9,20 @@ import {useThree} from '@react-three/fiber'
 import type {ISheet} from '@theatre/core'
 import {bindToCanvas} from './store'
 
-const ctx = createContext<{sheet: ISheet}>(undefined!)
+export type R3FSheetConfig = {
+  namespacePrefix?: string; 
+}
 
-const useWrapperContext = (): {sheet: ISheet} => {
+export type R3FSheetContext = {
+  sheet: ISheet,
+  config?: R3FSheetConfig
+}
+
+const ctx = createContext<R3FSheetContext>(undefined!)
+
+const useWrapperContext = (): R3FSheetContext => {
   const val = useContext(ctx)
-  if (!val) {
+  if (!val || !val.sheet) {
     throw new Error(
       `No sheet found. You need to add a <SheetProvider> higher up in the tree. https://docs.theatrejs.com/r3f.html#sheetprovider`,
     )
@@ -25,10 +34,17 @@ export const useCurrentSheet = (): ISheet | undefined => {
   return useWrapperContext().sheet
 }
 
+export const useCurrentR3FSheetConfig = (): R3FSheetConfig | undefined => {
+  return useWrapperContext().config
+}
+
+
+
 const SheetProvider: React.FC<{
   sheet: ISheet
   children: ReactNode
-}> = ({sheet, children}) => {
+  config?: R3FSheetConfig
+}> = ({sheet, children, config}) => {
   const {scene, gl} = useThree((s) => ({scene: s.scene, gl: s.gl}))
 
   useEffect(() => {
@@ -41,7 +57,7 @@ const SheetProvider: React.FC<{
     bindToCanvas({gl, scene})
   }, [scene, gl])
 
-  return <ctx.Provider value={{sheet}}>{children}</ctx.Provider>
+  return <ctx.Provider value={{sheet, config}}>{children}</ctx.Provider>
 }
 
 export default SheetProvider
